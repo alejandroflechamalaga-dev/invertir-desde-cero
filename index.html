@@ -458,6 +458,13 @@
         <div class="lg:col-span-2 space-y-5 sm:space-y-7 min-w-0">
           <div>
             <div class="flex items-baseline justify-between mb-2">
+              <label class="text-sm text-[color:var(--muted)]">Aportación inicial</label>
+              <span id="ciIlbl" class="mono font-bold text-lg text-emerald-300">0&nbsp;€</span>
+            </div>
+            <input id="ciInitial" aria-label="Aportación inicial" type="range" min="0" max="20000" step="250" value="0">
+          </div>
+          <div>
+            <div class="flex items-baseline justify-between mb-2">
               <label class="text-sm text-[color:var(--muted)]">Aportación mensual</label>
               <span id="ciMlbl" class="mono font-bold text-lg text-emerald-300">100&nbsp;€</span>
             </div>
@@ -1426,8 +1433,8 @@ GLOSSARY.forEach(g=>{
 
 /* ================= 2b · Las dos fuerzas: rentabilidad vs riesgo ================= */
 /* ================= 3 · Interés compuesto ================= */
-const ciMonthly=document.getElementById('ciMonthly'), ciYears=document.getElementById('ciYears'), ciRate=document.getElementById('ciRate');
-const ciMlbl=document.getElementById('ciMlbl'), ciYlbl=document.getElementById('ciYlbl'), ciRlbl=document.getElementById('ciRlbl');
+const ciInitial=document.getElementById('ciInitial'), ciMonthly=document.getElementById('ciMonthly'), ciYears=document.getElementById('ciYears'), ciRate=document.getElementById('ciRate');
+const ciIlbl=document.getElementById('ciIlbl'), ciMlbl=document.getElementById('ciMlbl'), ciYlbl=document.getElementById('ciYlbl'), ciRlbl=document.getElementById('ciRlbl');
 const ciPrincipal=document.getElementById('ciPrincipal'), ciFinal=document.getElementById('ciFinal'), ciGain=document.getElementById('ciGain');
 
 const ciChart = new Chart(document.getElementById('ciChart'), {
@@ -1446,8 +1453,9 @@ const ciChart = new Chart(document.getElementById('ciChart'), {
   }
 });
 function computeCompound(){
-  const P=+ciMonthly.value, Y=+ciYears.value, R=+ciRate.value;
-  setP(ciMonthly); setP(ciYears); setP(ciRate);
+  const I=+ciInitial.value, P=+ciMonthly.value, Y=+ciYears.value, R=+ciRate.value;
+  setP(ciInitial); setP(ciMonthly); setP(ciYears); setP(ciRate);
+  ciIlbl.textContent = num0.format(I)+' €';
   ciMlbl.textContent = num0.format(P)+' €';
   ciYlbl.textContent = Y+(Y===1?' año':' años');
   ciRlbl.textContent = (R%1===0?R:R.toFixed(1))+'%';
@@ -1456,8 +1464,8 @@ function computeCompound(){
   for(let y=0;y<=Y;y++){
     const n=y*12;
     labels.push(y);
-    const principal = P*n;
-    const fv = r===0? principal : P*((Math.pow(1+r,n)-1)/r);
+    const principal = I + P*n;
+    const fv = (r===0 ? principal : I*Math.pow(1+r,n) + P*((Math.pow(1+r,n)-1)/r));
     sav.push(Math.round(principal));
     inv.push(Math.round(fv));
   }
@@ -1465,13 +1473,13 @@ function computeCompound(){
   ciChart.data.datasets[0].data=inv;
   ciChart.data.datasets[1].data=sav;
   ciChart.update('none');
-  const principal=P*Y*12;
+  const principal=I + P*Y*12;
   const final=inv[inv.length-1];
   animateValue(ciPrincipal, principal, v=>eur0.format(Math.round(v)));
   animateValue(ciFinal, final, v=>eur0.format(Math.round(v)));
   animateValue(ciGain, final-principal, v=>eur0.format(Math.round(v)));
 }
-[ciMonthly,ciYears,ciRate].forEach(s=>s.addEventListener('input',computeCompound));
+[ciInitial,ciMonthly,ciYears,ciRate].forEach(s=>s.addEventListener('input',computeCompound));
 computeCompound();
 
 /* ================= 3b · Simulador de comisiones ================= */
