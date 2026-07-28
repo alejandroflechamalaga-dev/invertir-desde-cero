@@ -1124,7 +1124,35 @@
             </div>
           </div>
           <div>
-            <div class="text-sm font-semibold mb-2.5">3 · ¿Qué echas en falta en esta guía? <span class="font-normal text-[color:var(--faint)]">(opcional)</span></div>
+            <div class="text-sm font-semibold mb-2.5">3 · ¿Cómo preferirías invertir tu dinero?</div>
+            <div class="space-y-2" data-q="como_invertir">
+              <button type="button" class="svyOpt">Yo mismo, eligiendo mis fondos</button>
+              <button type="button" class="svyOpt">Delegarlo: que un gestor o servicio automatizado lo haga por mí</button>
+              <button type="button" class="svyOpt">Una mezcla: una parte yo, otra delegada</button>
+              <button type="button" class="svyOpt">No lo tengo claro todavía</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-2.5">4 · ¿Qué tendría que cumplir un gestor para que le confiaras tu dinero?</div>
+            <div class="space-y-2" data-q="confianza_gestor">
+              <button type="button" class="svyOpt">Comisiones bajas y claras</button>
+              <button type="button" class="svyOpt">Estar regulado (CNMV)</button>
+              <button type="button" class="svyOpt">Historial demostrable de años</button>
+              <button type="button" class="svyOpt">Que me lo recomiende alguien de confianza</button>
+              <button type="button" class="svyOpt">Nada: prefiero gestionarlo yo siempre</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-2.5">5 · Si delegaras, ¿con cuánto te sentirías cómodo empezando? <span class="font-normal text-[color:var(--faint)]">(opcional)</span></div>
+            <div class="space-y-2" data-q="ticket">
+              <button type="button" class="svyOpt">Menos de 1.000 €</button>
+              <button type="button" class="svyOpt">1.000 – 10.000 €</button>
+              <button type="button" class="svyOpt">Más de 10.000 €</button>
+              <button type="button" class="svyOpt">No delegaría</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-2.5">6 · ¿Qué echas en falta en esta guía? <span class="font-normal text-[color:var(--faint)]">(opcional)</span></div>
             <textarea id="svyComment" class="svyField" rows="2" placeholder="Ej.: fiscalidad, planes de pensiones, cripto…"></textarea>
           </div>
           <div>
@@ -1157,15 +1185,18 @@
       document.getElementById('svySend').addEventListener('click',function(){
         var btn=this;
         if(sending) return;
-        if(!answers.ya_inviertes||!answers.que_te_frena){
-          btn.textContent='Responde a las preguntas 1 y 2 :)';
-          setTimeout(function(){btn.textContent='Enviar respuesta';},2000);
+        if(!answers.ya_inviertes||!answers.que_te_frena||!answers.como_invertir||!answers.confianza_gestor){
+          btn.textContent='Te falta alguna pregunta (la 5 y la 6 son opcionales) :)';
+          setTimeout(function(){btn.textContent='Enviar respuesta';},2200);
           return;
         }
         sending=true; btn.textContent='Enviando…';
         var payload={
           ya_inviertes:answers.ya_inviertes,
           que_te_frena:answers.que_te_frena,
+          como_invertir:answers.como_invertir,
+          confianza_gestor:answers.confianza_gestor,
+          ticket:answers.ticket||'—',
           comentario:document.getElementById('svyComment').value.trim()||'—',
           email_contacto:document.getElementById('svyEmail').value.trim()||'—',
           _subject:'Nueva respuesta · Invertir desde cero',
