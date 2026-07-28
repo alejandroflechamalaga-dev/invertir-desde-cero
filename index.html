@@ -1090,6 +1090,104 @@
       <p class="font-display text-2xl sm:text-3xl font-bold tracking-tight max-w-2xl mx-auto">El mejor momento para empezar fue hace 10 años.<br><span class="grad-em">El segundo mejor es hoy.</span></p>
     </div>
 
+    <!-- ================= CUESTIONARIO ================= -->
+    <div class="reveal mt-16 max-w-2xl mx-auto" id="encuesta">
+      <style>
+        .svyOpt{display:block;width:100%;text-align:left;border:1px solid var(--border);background:rgba(255,255,255,0.6);border-radius:0.9rem;padding:0.7rem 1rem;font-size:0.875rem;color:var(--muted);cursor:pointer;transition:all .15s;}
+        .svyOpt:hover{border-color:var(--border2);}
+        .svyOpt.sel{border-color:#059669;background:rgba(16,185,129,0.10);color:var(--text);font-weight:600;}
+        .svyField{width:100%;border:1px solid var(--border);background:rgba(255,255,255,0.7);border-radius:0.9rem;padding:0.7rem 1rem;font-size:0.875rem;color:var(--text);}
+        .svyField:focus{outline:2px solid rgba(5,150,105,0.4);}
+      </style>
+      <div class="glass rounded-3xl p-6 sm:p-8">
+        <div class="chip mb-3">Cuéntame · 1 minuto</div>
+        <h3 class="font-display text-xl sm:text-2xl font-bold tracking-tight mb-1.5">¿Qué te frena para invertir?</h3>
+        <p class="text-sm text-[color:var(--muted)] mb-6">Esta guía la mejoro con lo que me contéis. Es anónimo salvo que quieras dejarme tu email.</p>
+
+        <div id="svyForm" class="space-y-6">
+          <div>
+            <div class="text-sm font-semibold mb-2.5">1 · ¿Ya inviertes?</div>
+            <div class="space-y-2" data-q="ya_inviertes">
+              <button type="button" class="svyOpt">Sí, ya invierto</button>
+              <button type="button" class="svyOpt">No, pero quiero empezar</button>
+              <button type="button" class="svyOpt">No, y de momento no me lo planteo</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-2.5">2 · ¿Qué es lo que más te frena (o te frenaba)?</div>
+            <div class="space-y-2" data-q="que_te_frena">
+              <button type="button" class="svyOpt">Miedo a perder dinero</button>
+              <button type="button" class="svyOpt">No saber por dónde empezar</button>
+              <button type="button" class="svyOpt">Desconfianza en bancos y asesores</button>
+              <button type="button" class="svyOpt">Sentir que no tengo suficiente dinero</button>
+              <button type="button" class="svyOpt">Pereza o falta de tiempo</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-2.5">3 · ¿Qué echas en falta en esta guía? <span class="font-normal text-[color:var(--faint)]">(opcional)</span></div>
+            <textarea id="svyComment" class="svyField" rows="2" placeholder="Ej.: fiscalidad, planes de pensiones, cripto…"></textarea>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-2.5">Tu email <span class="font-normal text-[color:var(--faint)]">(opcional, solo para avisarte de novedades de la guía)</span></div>
+            <input id="svyEmail" type="email" class="svyField" placeholder="tu@email.com" autocomplete="email">
+          </div>
+          <button id="svySend" type="button" class="inline-flex w-full items-center justify-center gap-2 px-4 py-3 rounded-full text-sm font-semibold text-black bg-emerald-400 hover:bg-emerald-300 transition">Enviar respuesta</button>
+          <p class="text-[11px] text-[color:var(--faint)]">Sin spam. Si dejas tu email, solo lo uso para avisarte de mejoras de la guía y puedes pedirme que lo borre cuando quieras.</p>
+        </div>
+        <div id="svyOk" class="hidden text-center py-8">
+          <div class="font-display text-2xl font-bold grad-em mb-2">¡Gracias!</div>
+          <p class="text-sm text-[color:var(--muted)]">Leo todas las respuestas. De verdad.</p>
+        </div>
+      </div>
+    </div>
+    <script>
+    (function(){
+      var answers={};
+      document.querySelectorAll('#svyForm [data-q]').forEach(function(group){
+        var key=group.getAttribute('data-q');
+        group.querySelectorAll('.svyOpt').forEach(function(btn){
+          btn.addEventListener('click',function(){
+            group.querySelectorAll('.svyOpt').forEach(function(b){b.classList.remove('sel');});
+            btn.classList.add('sel');
+            answers[key]=btn.textContent.trim();
+          });
+        });
+      });
+      var sending=false;
+      document.getElementById('svySend').addEventListener('click',function(){
+        var btn=this;
+        if(sending) return;
+        if(!answers.ya_inviertes||!answers.que_te_frena){
+          btn.textContent='Responde a las preguntas 1 y 2 :)';
+          setTimeout(function(){btn.textContent='Enviar respuesta';},2000);
+          return;
+        }
+        sending=true; btn.textContent='Enviando…';
+        var payload={
+          ya_inviertes:answers.ya_inviertes,
+          que_te_frena:answers.que_te_frena,
+          comentario:document.getElementById('svyComment').value.trim()||'—',
+          email_contacto:document.getElementById('svyEmail').value.trim()||'—',
+          _subject:'Nueva respuesta · Invertir desde cero',
+          _template:'table',
+          _captcha:'false'
+        };
+        fetch('https://formsubmit.co/ajax/aflecharuiz@gmail.com',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body:JSON.stringify(payload)
+        }).then(function(r){return r.json();}).then(function(){
+          document.getElementById('svyForm').classList.add('hidden');
+          document.getElementById('svyOk').classList.remove('hidden');
+        }).catch(function(){
+          sending=false;
+          btn.textContent='Error al enviar — inténtalo de nuevo';
+          setTimeout(function(){btn.textContent='Enviar respuesta';},2500);
+        });
+      });
+    })();
+    </script>
+
     <!-- ================= LEGAL ================= -->
     <div class="reveal mt-14 max-w-3xl mx-auto">
       <div class="rounded-2xl p-6 sm:p-7 text-left" style="background:rgba(255,255,255,0.42);border:1px solid var(--border)">
@@ -1103,6 +1201,8 @@
           <p><b class="text-[color:var(--text)]">Enlaces de afiliación e invitación.</b> Esta página incluye enlaces de invitación y códigos promocionales de <b>MyInvestor</b> y <b>Revolut</b>. Si te registras o contratas a través de ellos, el autor puede recibir una comisión, bonificación o recompensa, y en algunos casos tú también obtienes una ventaja promocional, <b>sin ningún coste adicional para ti</b>. Esto no condiciona el contenido educativo, pero conviene que lo conozcas por transparencia. Las promociones, importes y condiciones (por ejemplo, la bonificación por invertir 100&nbsp;€ o la promoción «Cliente 1 Millón») las fija cada entidad, pueden cambiar o finalizar en cualquier momento y están sujetas a sus propios términos y condiciones. El autor no forma parte de MyInvestor ni de Revolut ni actúa en su nombre.</p>
 
           <p><b class="text-[color:var(--text)]">Fuentes de los datos.</b> Datos de mercado de <b>Bloomberg</b> (julio de 2026): S&amp;P&nbsp;500 Total Return (SPXT) y MSCI World Net Total Return (NDDUWI), en dólares (USD). Datos de inflación (IPC de España) del <b>INE</b>. Las cifras pueden diferir de otras fuentes por diferencias de divisa, fechas de corte o metodología.</p>
+
+          <p><b class="text-[color:var(--text)]">Cuestionario y datos.</b> Las respuestas al cuestionario se envían mediante el servicio FormSubmit y se reciben por correo electrónico. Son anónimas salvo que decidas incluir tu email, que se usará únicamente para avisarte de novedades de esta guía. Puedes pedir su eliminación en cualquier momento escribiendo a aflecharuiz@gmail.com.</p>
 
           <p><b class="text-[color:var(--text)]">Limitación de responsabilidad.</b> El autor no se responsabiliza de las decisiones de inversión que tomes ni de las eventuales pérdidas derivadas del uso de esta información. El uso de este contenido es bajo tu propia responsabilidad. La información se ofrece «tal cual», sin garantía de exactitud, integridad o vigencia, y puede quedar desactualizada.</p>
 
