@@ -1190,23 +1190,20 @@
           return;
         }
         sending=true; btn.textContent='Enviando…';
-        var payload={
-          ya_inviertes:answers.ya_inviertes,
-          que_te_frena:answers.que_te_frena,
-          como_invertir:answers.como_invertir,
-          confianza_gestor:answers.confianza_gestor,
-          ticket:answers.ticket||'—',
-          comentario:document.getElementById('svyComment').value.trim()||'—',
-          email_contacto:document.getElementById('svyEmail').value.trim()||'—',
-          _subject:'Nueva respuesta · Invertir desde cero',
-          _template:'table',
-          _captcha:'false'
-        };
-        fetch('https://formsubmit.co/ajax/aflecharuiz@gmail.com',{
+        var params=new URLSearchParams();
+        params.append('entry.1015182126',answers.ya_inviertes);
+        params.append('entry.363202559',answers.que_te_frena);
+        params.append('entry.57009140',answers.como_invertir);
+        params.append('entry.1396764850',answers.confianza_gestor);
+        params.append('entry.1108347571',answers.ticket||'—');
+        params.append('entry.1491001254',document.getElementById('svyComment').value.trim()||'—');
+        params.append('entry.1083500339',document.getElementById('svyEmail').value.trim()||'—');
+        fetch('https://docs.google.com/forms/d/e/1FAIpQLSdet8iJQnEs0GSmWf6CKIqWQAod-bfw_iBhPUMCL-FuNzbR1Q/formResponse',{
           method:'POST',
-          headers:{'Content-Type':'application/json','Accept':'application/json'},
-          body:JSON.stringify(payload)
-        }).then(function(r){return r.json();}).then(function(){
+          mode:'no-cors',
+          headers:{'Content-Type':'application/x-www-form-urlencoded'},
+          body:params.toString()
+        }).then(function(){
           document.getElementById('svyForm').classList.add('hidden');
           document.getElementById('svyOk').classList.remove('hidden');
         }).catch(function(){
@@ -1232,7 +1229,7 @@
 
           <p><b class="text-[color:var(--text)]">Fuentes de los datos.</b> Datos de mercado de <b>Bloomberg</b> (julio de 2026): S&amp;P&nbsp;500 Total Return (SPXT) y MSCI World Net Total Return (NDDUWI), en dólares (USD). Datos de inflación (IPC de España) del <b>INE</b>. Las cifras pueden diferir de otras fuentes por diferencias de divisa, fechas de corte o metodología.</p>
 
-          <p><b class="text-[color:var(--text)]">Cuestionario y datos.</b> Las respuestas al cuestionario se envían mediante el servicio FormSubmit y se reciben por correo electrónico. Son anónimas salvo que decidas incluir tu email, que se usará únicamente para avisarte de novedades de esta guía. Puedes pedir su eliminación en cualquier momento escribiendo a aflecharuiz@gmail.com.</p>
+          <p><b class="text-[color:var(--text)]">Cuestionario y datos.</b> Las respuestas al cuestionario se recogen mediante Google Forms. Son anónimas salvo que decidas incluir tu email, que se usará únicamente para avisarte de novedades de esta guía. Puedes pedir su eliminación en cualquier momento escribiendo a aflecharuiz@gmail.com.</p>
 
           <p><b class="text-[color:var(--text)]">Limitación de responsabilidad.</b> El autor no se responsabiliza de las decisiones de inversión que tomes ni de las eventuales pérdidas derivadas del uso de esta información. El uso de este contenido es bajo tu propia responsabilidad. La información se ofrece «tal cual», sin garantía de exactitud, integridad o vigencia, y puede quedar desactualizada.</p>
 
