@@ -191,7 +191,8 @@
         <tbody></tbody>
       </table>
       </div>
-      <p class="sub" style="margin-top:12px"><span class="tagok">Auto</span> = reconocido por su ISIN, con datos reales de comisión y composición. <span class="tagman" style="margin-left:6px">Manual</span> = no lo tengo en la base: elige tú el tipo y su comisión anual para incluirlo en el análisis.</p>
+      <datalist id="fondos"></datalist>
+      <p class="sub" style="margin-top:12px"><span class="tagok">Auto</span> = reconocido por su ISIN o su nombre, con datos reales de comisión y composición. <span class="tagman" style="margin-left:6px">Manual</span> = no lo tengo en la base: elige tú el tipo y su comisión anual para incluirlo en el análisis.</p>
       <div class="btnrow">
         <button class="btn solid" id="btnGo">Analizar mi cartera
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
@@ -210,6 +211,29 @@
       <div class="tile" id="tileTer"><div class="lab">Comisión media</div><div class="val mono" id="kTer">—</div><div class="hint" id="kTerH">—</div></div>
       <div class="tile" id="tileCost"><div class="lab">Te cuesta al año</div><div class="val mono" id="kCost">—</div><div class="hint" id="kCostH">—</div></div>
       <div class="tile" id="tileConc"><div class="lab">Mayor posición</div><div class="val mono" id="kConc">—</div><div class="hint" id="kConcH">—</div></div>
+    </div>
+
+    <div class="card" id="histCard" style="margin-top:18px">
+      <h3>Cómo se habría comportado tu cartera</h3>
+      <p class="sub">Aplicando <b>tus pesos actuales</b> a la rentabilidad real por año natural de los índices que replican tus fondos, desde 2021. No es tu rentabilidad real (no sé cuándo compraste): es el comportamiento que habría tenido esta misma cartera.</p>
+      <div class="tiles" style="margin-top:16px">
+        <div class="tile" id="tileCagr"><div class="lab">Rentabilidad anualizada</div><div class="val mono" id="kCagr">—</div><div class="hint" id="kCagrH">—</div></div>
+        <div class="tile" id="tileBest"><div class="lab">Mejor año</div><div class="val mono" id="kBest">—</div><div class="hint" id="kBestH">—</div></div>
+        <div class="tile warn" id="tileWorst"><div class="lab">Peor año</div><div class="val mono" id="kWorst">—</div><div class="hint" id="kWorstH">—</div></div>
+        <div class="tile" id="tileVol"><div class="lab">Volatilidad media</div><div class="val mono" id="kVol">—</div><div class="hint" id="kVolH">—</div></div>
+      </div>
+      <div class="grid2" style="margin-top:18px">
+        <div>
+          <h3 style="font-size:15px">Evolución de 10.000 € desde 2021</h3>
+          <div class="chartbox" style="height:250px"><canvas id="chHist" role="img" aria-label="Evolución simulada de la cartera desde 2021"></canvas></div>
+          <div class="legend" id="lgHist"></div>
+        </div>
+        <div>
+          <h3 style="font-size:15px">Año a año</h3>
+          <div class="chartbox" style="height:250px"><canvas id="chYear" role="img" aria-label="Rentabilidad de la cartera por año natural"></canvas></div>
+          <details class="tbl" id="dtYear"><summary>Ver los datos en tabla</summary><div id="tbYear"></div></details>
+        </div>
+      </div>
     </div>
 
     <div class="grid2" style="margin-top:18px">
@@ -281,6 +305,19 @@
    TER y sectores: catálogo MyInvestor (datos Morningstar), julio 2026.
    Reparto geográfico: estimación por índice replicado.
    ======================================================================= */
+const YEARS = ['2021','2022','2023','2024','2025','2026*'];
+/* Rentabilidad por AÑO NATURAL en EUR (catálogo MyInvestor / Morningstar, jul-2026).
+   2026* = en lo que va de año. */
+const RET = {
+  world :[30.98,-12.85,19.54,26.50, 6.65,12.55],
+  sp500 :[37.81,-13.23,21.31,32.70, 3.45,12.39],
+  em    :[ 4.52,-15.12, 5.54,14.79,17.62,17.54],
+  europe:[25.41, -9.25,16.05, 8.77,19.63,11.30],
+  glagg :[-2.83,-15.06, 4.69, 0.83, 2.84,-0.80]
+};
+/* Volatilidad a 3 años (%) por índice, misma fuente */
+const VOL = {world:11.65, sp500:13.01, em:15.85, europe:10.68, glagg:4.44};
+
 const IDX = {
   world:  {label:'MSCI World (desarrollados)', geo:{'EE. UU.':71,'Europa':14,'Japón':5.5,'Otros desarrollados':9.5}},
   sp500:  {label:'S&P 500 (EE. UU.)',          geo:{'EE. UU.':100}},
@@ -336,6 +373,11 @@ const pct = n => n.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFracti
 
 /* ================= ESTADO ================= */
 let POS = [];
+/* autocompletado con los fondos de la base */
+document.addEventListener('DOMContentLoaded',()=>{
+  const dl=document.getElementById('fondos');
+  if(dl) dl.innerHTML=Object.keys(DB).map(k=>`<option value="${DB[k].n}">${k}</option>`).join('');
+});
 
 /* ================= ENTRADA ================= */
 const drop=document.getElementById('drop'), fileInput=document.getElementById('file'), msg=document.getElementById('csvmsg');
@@ -436,7 +478,7 @@ function renderPos(){
     tr.innerHTML =
       `<td>${p.auto
           ? `<b>${esc(p.name)}</b><br><span class="mono" style="font-size:11px;color:var(--faint)">${p.isin}</span> <span class="tagok">Auto</span>`
-          : `<input class="fld" data-i="${i}" data-f="name" value="${esc(p.name)}" placeholder="Nombre del fondo o ISIN"> <span class="tagman" style="margin-top:6px">Manual</span>`}</td>
+          : `<input class="fld" data-i="${i}" data-f="name" list="fondos" value="${esc(p.name)}" placeholder="Escribe el nombre o pega el ISIN"> <span class="tagman" style="margin-top:6px">Manual</span>`}</td>
        <td>${p.auto
           ? `<span style="color:var(--muted);font-size:13px">${CLS_LAB[p.cls]}${p.idx?' · '+IDX[p.idx].label.split(' (')[0]:''}</span>`
           : `<select class="fld" data-i="${i}" data-f="perfil">${opts}</select>`}</td>
@@ -452,7 +494,14 @@ function renderPos(){
       const i=+e.target.dataset.i, f=e.target.dataset.f;
       if(f==='amt'||f==='ter'){ POS[i][f]= toNum(e.target.value)||0; }
       else if(f==='perfil'){ POS[i].perfil=e.target.value; POS[i].ter=PERFILES[e.target.value].ter; renderPos(); }
-      else POS[i][f]=e.target.value;
+      else {
+        POS[i][f]=e.target.value;
+        if(f==='name'){                       // ¿coincide con un fondo de la base?
+          const v=e.target.value.trim().toUpperCase();
+          const hit = DB[v] ? v : Object.keys(DB).find(k=>DB[k].n.toUpperCase()===v);
+          if(hit){ const keep=POS[i].amt; POS[i]=mkPos(hit,null,keep); renderPos(); }
+        }
+      }
     });
   });
   tb.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{
@@ -501,7 +550,24 @@ function analiza(){
   const byIdx={}; items.forEach(p=>{ if(p.idx) byIdx[p.idx]=(byIdx[p.idx]||[]).concat([p]); });
   const dupes=Object.keys(byIdx).filter(k=>byIdx[k].length>1);
 
-  render(items,{total,terW,costY,byCls,byGeo,geoTot,bySec,secBase,sorted,topShare,hhi,byIdx,dupes});
+  /* --- histórico simulado con los pesos actuales --- */
+  const hb = items.filter(p=>p.idx && RET[p.idx]);          // base con datos históricos
+  const hTot = hb.reduce((a,b)=>a+b.amt,0);
+  let hist=null;
+  if(hTot>0){
+    const yr = YEARS.map((_,i)=>
+      hb.reduce((a,p)=>a + (p.amt/hTot)*RET[p.idx][i], 0) - terW);   // neto de comisiones
+    const cum=[10000]; yr.forEach(r=>cum.push(cum[cum.length-1]*(1+r/100)));
+    const nY = yr.length;                                   // 2026 es parcial: se cuenta igual
+    const cagr = (Math.pow(cum[cum.length-1]/10000, 1/nY)-1)*100;
+    const vol  = hb.reduce((a,p)=>a + (p.amt/hTot)*(VOL[p.idx]||0), 0);
+    let bi=0,wi=0; yr.forEach((r,i)=>{ if(r>yr[bi])bi=i; if(r<yr[wi])wi=i; });
+    const cover = hTot/m_total_safe(items);
+    hist={yr,cum,cagr,vol,bi,wi,cover};
+  }
+  function m_total_safe(it){return it.reduce((a,b)=>a+b.amt,0);}
+
+  render(items,{total,terW,costY,byCls,byGeo,geoTot,bySec,secBase,sorted,topShare,hhi,byIdx,dupes,hist});
   document.getElementById('results').style.display='block';
   document.getElementById('results').scrollIntoView({behavior:'smooth'});
 }
@@ -522,6 +588,48 @@ function render(items,m){
   document.getElementById('kConc').textContent=pct(m.topShare);
   document.getElementById('kConcH').textContent=m.sorted[0].name.length>44?m.sorted[0].name.slice(0,42)+'…':m.sorted[0].name;
   document.getElementById('tileConc').className='tile'+(m.topShare>60?' warn':'');
+
+  /* ---- 0. histórico simulado ---- */
+  const H=m.hist;
+  if(H){
+    document.getElementById('histCard').style.display='block';
+    const sgn=v=>(v>=0?'+':'')+v.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+    document.getElementById('kCagr').textContent=sgn(H.cagr);
+    document.getElementById('kCagr').style.color=H.cagr>=0?'var(--emerald)':'var(--rose)';
+    document.getElementById('kCagrH').textContent='Media anual 2021–2026, ya descontadas tus comisiones.';
+    document.getElementById('kBest').textContent=sgn(H.yr[H.bi]);
+    document.getElementById('kBest').style.color='var(--emerald)';
+    document.getElementById('kBestH').textContent='En '+YEARS[H.bi].replace('*','');
+    document.getElementById('kWorst').textContent=sgn(H.yr[H.wi]);
+    document.getElementById('kWorst').style.color='var(--rose)';
+    document.getElementById('kWorstH').textContent='En '+YEARS[H.wi].replace('*','')+'. Esto es lo que tienes que poder aguantar sin vender.';
+    document.getElementById('kVol').textContent=H.vol.toLocaleString('es-ES',{maximumFractionDigits:1})+'%';
+    document.getElementById('kVolH').textContent=H.vol<8?'Cartera tranquila.':H.vol<13?'Volatilidad típica de una cartera global.':'Alta: prepárate para vaivenes fuertes.';
+    document.getElementById('tileVol').className='tile'+(H.vol>=13?' warn':'');
+
+    mkChart('chHist','line',{
+      labels:['Inicio'].concat(YEARS.map(y=>y.replace('*',''))),
+      datasets:[{label:'Tu cartera',data:H.cum,borderColor:PAL[0],backgroundColor:'rgba(5,150,105,0.08)',
+        borderWidth:2,tension:.28,pointRadius:0,pointHoverRadius:8,fill:true}]
+    },{scales:{x:{grid:{display:false},border:{display:false},ticks:{color:FAINT,font:{size:11}}},
+               y:{grid:{color:GRID,drawTicks:false},border:{display:false},
+                  ticks:{color:FAINT,font:{size:11},callback:v=>(v/1000).toFixed(0)+'k €'}}},
+       plugins:{tooltip:{callbacks:{label:c=>' '+eur(c.parsed.y)}}}});
+    const fin=H.cum[H.cum.length-1];
+    legend('lgHist',[{c:PAL[0],t:'10.000 € se habrían convertido en '+eur(fin)}]);
+
+    mkChart('chYear','bar',{
+      labels:YEARS.map(y=>y.replace('*','')),
+      datasets:[{data:H.yr,backgroundColor:H.yr.map(v=>v>=0?PAL[0]:PAL[3]),
+        borderRadius:4,borderSkipped:false,barPercentage:.68,categoryPercentage:.8}]
+    },{scales:{x:{grid:{display:false},border:{display:false},ticks:{color:MUT,font:{size:11}}},
+               y:{grid:{color:GRID,drawTicks:false},border:{display:false},
+                  ticks:{color:FAINT,font:{size:11},callback:v=>v+'%'}}},
+       plugins:{tooltip:{callbacks:{label:c=>' '+sgn(c.parsed.y)+' ese año'}}}});
+    tableView('tbYear',YEARS.map((y,i)=>[y.replace('*',' (parcial)'),sgn(H.yr[i])]),['Año','Rentabilidad neta']);
+  } else {
+    document.getElementById('histCard').style.display='none';
+  }
 
   /* ---- 1. clase de activo (donut) ---- */
   const clsKeys=Object.keys(m.byCls).sort((a,b)=>m.byCls[b]-m.byCls[a]);
@@ -620,6 +728,10 @@ function render(items,m){
   if(tec>30) O.push(['info','<b>El '+pct(tec)+' de tu renta variable está en tecnología.</b> No lo elegiste tú: es el peso que tiene el sector dentro de los índices. Es la mayor concentración sectorial de tu cartera.']);
   if(rvPct>0&&rvPct<100) O.push(['info','<b>Tu cartera es '+pct(rvPct)+' renta variable</b> y '+pct(100-rvPct)+' el resto. Cuanta más renta variable, más rentabilidad esperada a largo plazo y más vaivenes por el camino.']);
   else if(rvPct>=100) O.push(['info','<b>Tu cartera es 100% renta variable.</b> Máximo potencial a largo plazo y máximas caídas cuando vengan mal dadas: solo tiene sentido si no vas a necesitar ese dinero en muchos años.']);
+  if(H){
+    O.push([H.yr[H.wi]<-10?'warn':'info','<b>En su peor año ('+YEARS[H.wi].replace('*','')+') esta cartera habría caído un '+Math.abs(H.yr[H.wi]).toFixed(1)+'%.</b> Sobre '+eur(m.total)+' son unos '+eur(m.total*Math.abs(H.yr[H.wi])/100)+' de caída temporal. La pregunta útil no es si va a pasar, sino si lo aguantarías sin vender.']);
+    if(H.cover<0.98) O.push(['info','<b>El histórico cubre el '+pct(H.cover*100)+' de tu cartera</b>, que es la parte con índice reconocido. El resto no entra en esta simulación.']);
+  }
   const manual=items.filter(p=>!p.auto).length;
   if(manual) O.push(['warn','<b>'+manual+(manual===1?' posición usa':' posiciones usan')+' datos que has introducido tú.</b> Su comisión y su composición son las que has indicado o las del perfil elegido, así que revísalas en el folleto (DFI/KID) si quieres precisión.']);
   document.getElementById('obsbox').innerHTML = O.map(o=>

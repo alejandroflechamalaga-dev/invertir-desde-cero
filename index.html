@@ -4,121 +4,145 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Flecha · Aprende a invertir y entiende tu cartera</title>
-<meta name="description" content="Invertir desde cero: guía interactiva y gratuita para aprender a invertir, y herramientas para entender tu cartera. Contenido educativo, no asesoramiento financiero.">
+<meta name="description" content="Invertir desde cero: guía interactiva y gratuita para aprender a invertir, y una herramienta para analizar tu cartera. Contenido educativo, no asesoramiento financiero.">
 <meta name="author" content="Alejandro Flecha">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#EEF1F5">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2215%22%20fill%3D%22%230B1220%22/%3E%3Cpath%20d%3D%22M21%2019%20L37%2032%20L21%2045%22%20fill%3D%22none%22%20stroke%3D%22%2310B981%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22square%22%20stroke-linejoin%3D%22miter%22/%3E%3Cpath%20d%3D%22M33%2019%20L49%2032%20L33%2045%22%20fill%3D%22none%22%20stroke%3D%22%2310B981%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22square%22%20stroke-linejoin%3D%22miter%22/%3E%3C/svg%3E">
 
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Flecha">
 <meta property="og:locale" content="es_ES">
 <meta property="og:url" content="https://invertir-desde-cero.vercel.app/">
 <meta property="og:title" content="Tu dinero parado está perdiendo. Vamos a arreglarlo.">
-<meta property="og:description" content="Guía interactiva y gratuita para empezar a invertir desde cero, y herramientas para entender tu cartera.">
+<meta property="og:description" content="Guía interactiva y gratuita para empezar a invertir desde cero, y una herramienta para entender tu cartera.">
 <meta property="og:image" content="https://invertir-desde-cero.vercel.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Flecha · Guía interactiva para invertir desde cero">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tu dinero parado está perdiendo. Vamos a arreglarlo.">
-<meta name="twitter:description" content="Guía interactiva y gratuita para empezar a invertir desde cero, y herramientas para entender tu cartera.">
+<meta name="twitter:description" content="Guía interactiva y gratuita para empezar a invertir desde cero, y una herramienta para entender tu cartera.">
 <meta name="twitter:image" content="https://invertir-desde-cero.vercel.app/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --text:#0B1220; --muted:#51607A; --faint:#8A97A8;
-    --emerald:#059669; --emerald2:#10B981;
-    --border:rgba(15,23,42,0.10); --border2:rgba(15,23,42,0.16);
-    --glass:rgba(255,255,255,0.72);
+    --text:#0B1220; --muted:#4A5A72; --faint:#8A97A8; --hair:rgba(15,23,42,0.09);
+    --em:#059669; --em2:#10B981; --em3:#34D399; --rose:#E11D48;
+    --glass:rgba(255,255,255,0.66);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
   body{
-    font-family:'Inter',system-ui,sans-serif;color:var(--text);
-    min-height:100vh;
+    font-family:'Inter',system-ui,sans-serif;color:var(--text);position:relative;overflow-x:hidden;
+    background:linear-gradient(168deg,#EFF2F6 0%,#F7F9FC 42%,#ECF6F1 100%);
+  }
+  /* textura sutil + halos */
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
     background:
-      radial-gradient(1000px 600px at 90% -10%, rgba(16,185,129,0.18), rgba(16,185,129,0) 60%),
-      radial-gradient(800px 500px at -10% 110%, rgba(16,185,129,0.10), rgba(16,185,129,0) 55%),
-      linear-gradient(140deg,#EEF1F5 0%,#F6F8FB 55%,#EDF6F1 100%);
-  }
+      radial-gradient(760px 520px at 88% -6%, rgba(16,185,129,0.20), transparent 62%),
+      radial-gradient(680px 480px at -8% 104%, rgba(16,185,129,0.11), transparent 58%);}
+  body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.42;
+    background-image:radial-gradient(rgba(15,23,42,0.05) 1px, transparent 1px);
+    background-size:28px 28px;
+    mask-image:radial-gradient(120% 95% at 50% 8%, #000 0%, rgba(0,0,0,.55) 42%, transparent 78%);
+    -webkit-mask-image:radial-gradient(120% 95% at 50% 8%, #000 0%, rgba(0,0,0,.55) 42%, transparent 78%);}
+  .wrap{position:relative;z-index:2;max-width:1120px;margin:0 auto;padding:0 26px;}
   .display{font-family:'Space Grotesk',system-ui,sans-serif;}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .mono{font-family:'Roboto Mono',monospace;}
 
-  /* Nav */
-  nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;}
+  /* ---------- nav ---------- */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0 8px;}
   .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);}
-  .logo .name{font-family:'Space Grotesk';font-weight:700;font-size:22px;letter-spacing:-0.02em;}
-  .navlinks{display:flex;gap:8px;}
-  .navlinks a{
-    text-decoration:none;color:var(--muted);font-size:14px;font-weight:600;
-    padding:8px 16px;border-radius:999px;border:1px solid transparent;transition:all .15s;
-  }
-  .navlinks a:hover{color:var(--text);border-color:var(--border);background:rgba(255,255,255,0.6);}
+  .logo .name{font-family:'Space Grotesk';font-weight:700;font-size:21px;letter-spacing:-0.02em;}
+  .navlinks{display:flex;align-items:center;gap:4px;}
+  .navlinks a{text-decoration:none;color:var(--muted);font-size:14px;font-weight:500;padding:9px 16px;border-radius:999px;transition:all .18s;}
+  .navlinks a:hover{color:var(--text);background:rgba(255,255,255,0.72);}
+  .navlinks a.cta{background:var(--text);color:#fff;font-weight:600;padding:9px 19px;}
+  .navlinks a.cta:hover{background:#1E293B;}
 
-  /* Hero */
-  .hero{text-align:center;padding:64px 0 40px;}
-  .quote{font-family:'Space Grotesk';font-weight:600;font-size:14px;letter-spacing:0.02em;
-    background:linear-gradient(90deg,#059669,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:18px;}
-  h1{font-family:'Space Grotesk';font-weight:700;letter-spacing:-0.03em;line-height:1.04;font-size:clamp(2.4rem,6.5vw,4.2rem);}
-  h1 .g{color:var(--emerald);}
-  .sub{margin:18px auto 0;max-width:640px;color:var(--muted);font-size:clamp(1rem,2.2vw,1.15rem);line-height:1.6;}
+  /* ---------- hero ---------- */
+  header{padding:74px 0 30px;position:relative;}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:11.5px;font-weight:600;letter-spacing:0.15em;
+    text-transform:uppercase;color:var(--em);background:rgba(16,185,129,0.09);border:1px solid rgba(5,150,105,0.16);
+    padding:7px 15px;border-radius:999px;}
+  .eyebrow .pulse{width:6px;height:6px;border-radius:99px;background:var(--em2);box-shadow:0 0 0 0 rgba(16,185,129,.55);animation:pulse 2.6s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 9px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+  h1{font-family:'Space Grotesk';font-weight:700;letter-spacing:-0.035em;line-height:1.02;
+    font-size:clamp(2.7rem,7.4vw,5rem);margin-top:26px;max-width:16ch;}
+  h1 em{font-style:normal;background:linear-gradient(96deg,#059669,#10B981 58%,#34D399);
+    -webkit-background-clip:text;background-clip:text;color:transparent;}
+  .lead{margin-top:24px;max-width:52ch;color:var(--muted);font-size:clamp(1.02rem,2.1vw,1.16rem);line-height:1.68;}
+  .quote{margin-top:30px;padding-left:16px;border-left:2px solid var(--em3);
+    font-family:'Space Grotesk';font-size:14.5px;font-weight:500;color:var(--muted);font-style:italic;}
 
-  /* Cards */
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:48px 0 12px;}
-  @media (max-width:760px){.cards{grid-template-columns:1fr;}}
-  .card{
-    position:relative;display:flex;flex-direction:column;text-align:left;
-    background:var(--glass);border:1px solid var(--border);border-radius:24px;
-    padding:30px 30px 26px;overflow:hidden;
-    box-shadow:0 24px 50px -30px rgba(11,18,32,0.35);
-    transition:transform .18s, box-shadow .18s;
-  }
-  .card:hover{transform:translateY(-3px);box-shadow:0 30px 60px -30px rgba(11,18,32,0.45);}
-  .card::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;}
-  .card.a::before{background:linear-gradient(90deg,#34D399,#059669);}
-  .card.b::before{background:linear-gradient(90deg,#94A3B8,#475569);}
-  .chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--faint);margin-bottom:14px;}
-  .chip .dot{width:7px;height:7px;border-radius:99px;background:var(--emerald2);}
-  .card.b .chip .dot{background:#94A3B8;}
-  .card h2{font-family:'Space Grotesk';font-weight:700;font-size:26px;letter-spacing:-0.02em;margin-bottom:10px;}
-  .card p{color:var(--muted);font-size:15px;line-height:1.6;}
-  .feats{margin:16px 0 22px;display:flex;flex-direction:column;gap:8px;}
-  .feats div{display:flex;gap:9px;align-items:flex-start;font-size:14px;color:var(--muted);}
-  .feats svg{flex-shrink:0;margin-top:2px;}
-  .cta{
-    margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    padding:13px 22px;border-radius:999px;font-size:15px;font-weight:600;text-decoration:none;transition:all .15s;
-  }
-  .cta.solid{background:#34D399;color:#0B1220;}
-  .cta.solid:hover{background:#6EE7B7;}
-  .cta.soft{background:rgba(255,255,255,0.7);border:1px solid var(--border2);color:var(--muted);}
-  .cta.soft:hover{border-color:var(--emerald);color:var(--emerald);}
-  .badge{
-    position:absolute;top:20px;right:20px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;
-    background:rgba(71,85,105,0.10);color:#475569;border:1px solid rgba(71,85,105,0.18);
-    padding:5px 12px;border-radius:999px;
-  }
+  /* franja de datos */
+  .stats{display:flex;flex-wrap:wrap;margin-top:46px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
+  .stat{flex:1 1 190px;padding:22px 26px 20px;border-right:1px solid var(--hair);}
+  .stat:last-child{border-right:none;}
+  @media (max-width:720px){.stat{border-right:none;border-bottom:1px solid var(--hair);}.stat:last-child{border-bottom:none;}}
+  .stat .v{font-family:'Space Grotesk';font-weight:700;font-size:clamp(1.6rem,3.4vw,2.05rem);letter-spacing:-0.025em;line-height:1;}
+  .stat .v.dn{color:var(--rose);} .stat .v.up{color:var(--em);}
+  .stat .l{margin-top:9px;font-size:12.5px;color:var(--faint);line-height:1.45;}
+  .stat .l b{color:var(--muted);font-weight:600;}
 
-  /* Stats strip */
-  .strip{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:36px 0 8px;}
-  .stat{
-    background:rgba(255,255,255,0.6);border:1px solid var(--border);border-radius:16px;
-    padding:12px 20px;text-align:center;min-width:150px;
-  }
-  .stat .v{font-family:'Space Grotesk';font-weight:700;font-size:22px;}
-  .stat .v.rose{color:#E11D48;}
-  .stat .v.em{color:var(--emerald);}
-  .stat .l{font-size:11px;color:var(--faint);margin-top:3px;}
+  /* ---------- tarjetas ---------- */
+  section.paths{margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  @media (max-width:820px){section.paths{grid-template-columns:1fr;}}
+  .path{position:relative;display:flex;flex-direction:column;text-decoration:none;color:inherit;
+    background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    border:1px solid var(--hair);border-radius:26px;padding:32px 32px 28px;overflow:hidden;
+    box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 26px 54px -34px rgba(11,18,32,0.4);
+    transition:transform .22s cubic-bezier(.2,.7,.3,1), box-shadow .22s, border-color .22s;}
+  .path:hover{transform:translateY(-4px);border-color:rgba(5,150,105,0.32);
+    box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 34px 64px -32px rgba(5,150,105,0.34);}
+  .path .num{position:absolute;top:26px;right:30px;font-family:'Space Grotesk';font-weight:700;
+    font-size:52px;line-height:1;color:rgba(15,23,42,0.05);letter-spacing:-0.04em;}
+  .path .tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;
+    letter-spacing:0.09em;text-transform:uppercase;color:var(--faint);}
+  .path .tag i{width:6px;height:6px;border-radius:99px;background:var(--em2);display:inline-block;}
+  .path h2{font-family:'Space Grotesk';font-weight:700;font-size:27px;letter-spacing:-0.025em;margin-top:15px;}
+  .path p{margin-top:11px;color:var(--muted);font-size:15px;line-height:1.62;}
+  .path ul{list-style:none;margin:20px 0 26px;display:flex;flex-direction:column;gap:10px;}
+  .path li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted);line-height:1.45;}
+  .path li svg{flex-shrink:0;margin-top:3px;}
+  .go{margin-top:auto;display:inline-flex;align-items:center;gap:9px;font-family:'Space Grotesk';
+    font-weight:600;font-size:15px;color:var(--em);}
+  .go .arw{display:grid;place-items:center;width:30px;height:30px;border-radius:999px;
+    background:rgba(16,185,129,0.12);transition:transform .22s, background .22s;}
+  .path:hover .go .arw{transform:translateX(4px);background:rgba(16,185,129,0.22);}
 
-  footer{text-align:center;padding:56px 0 40px;color:var(--faint);font-size:12px;line-height:1.7;}
-  footer b{color:var(--muted);}
-  footer a{color:var(--muted);}
+  /* ---------- cómo funciona ---------- */
+  section.how{margin-top:74px;}
+  .htitle{font-family:'Space Grotesk';font-weight:700;font-size:clamp(1.5rem,3.4vw,2rem);letter-spacing:-0.03em;}
+  .hsub{margin-top:10px;color:var(--muted);font-size:15px;max-width:56ch;line-height:1.62;}
+  .steps{margin-top:34px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  @media (max-width:820px){.steps{grid-template-columns:1fr;}}
+  .step{position:relative;padding:24px 22px;border:1px solid var(--hair);border-radius:20px;background:rgba(255,255,255,0.5);}
+  .step .n{width:30px;height:30px;border-radius:999px;background:var(--text);color:#fff;display:grid;place-items:center;
+    font-family:'Space Grotesk';font-weight:700;font-size:14px;}
+  .step h3{font-family:'Space Grotesk';font-weight:600;font-size:17px;margin-top:15px;letter-spacing:-0.015em;}
+  .step p{margin-top:8px;font-size:14px;color:var(--muted);line-height:1.58;}
+
+  /* ---------- cierre ---------- */
+  .closing{margin-top:78px;text-align:center;padding:52px 26px;border:1px solid var(--hair);border-radius:26px;
+    background:linear-gradient(150deg, rgba(255,255,255,0.78), rgba(236,246,241,0.62));}
+  .closing h2{font-family:'Space Grotesk';font-weight:700;font-size:clamp(1.5rem,4vw,2.2rem);letter-spacing:-0.03em;line-height:1.2;}
+  .closing h2 em{font-style:normal;color:var(--em);}
+  .closing .btn{margin-top:26px;display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+    background:var(--em3);color:#0B1220;font-weight:600;font-size:15px;padding:14px 26px;border-radius:999px;transition:all .18s;}
+  .closing .btn:hover{background:#6EE7B7;transform:translateY(-2px);}
+
+  footer{margin-top:56px;padding:34px 0 44px;border-top:1px solid var(--hair);
+    display:flex;justify-content:space-between;align-items:flex-end;gap:22px;flex-wrap:wrap;}
+  footer .fl{font-size:12px;color:var(--faint);line-height:1.75;max-width:56ch;}
+  footer .fl b{color:var(--muted);}
+  footer a{color:var(--muted);text-decoration:none;}
+  footer a:hover{color:var(--em);}
+  .flinks{display:flex;gap:18px;font-size:13px;}
 </style>
 </head>
 <body>
@@ -126,65 +150,116 @@
 
   <nav>
     <a class="logo" href="/">
-      <svg width="36" height="36" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#0B1220"/><path d="M21 19 L37 32 L21 45" fill="none" stroke="#10B981" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/><path d="M33 19 L49 32 L33 45" fill="none" stroke="#10B981" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+      <svg width="34" height="34" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#0B1220"/><path d="M21 19 L37 32 L21 45" fill="none" stroke="#10B981" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/><path d="M33 19 L49 32 L33 45" fill="none" stroke="#10B981" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/></svg>
       <span class="name">Flecha</span>
     </a>
     <div class="navlinks">
       <a href="/aprende">Aprende</a>
-      <a href="#cartera">Tu cartera</a>
+      <a href="/cartera" class="cta">Analizar mi cartera</a>
     </div>
   </nav>
 
-  <header class="hero">
-    <div class="quote">“When you risk nothing, you risk everything”</div>
-    <h1>Tu dinero, <span class="g">con criterio</span>.</h1>
-    <p class="sub">Aprende a invertir desde cero con una guía interactiva y gratuita, y entiende de verdad lo que tienes en tu cartera. Sin jerga, sin humo y con tus propios números.</p>
+  <header>
+    <span class="eyebrow"><span class="pulse"></span>Gratis · sin registro</span>
+    <h1>Tu dinero, <em>con criterio</em>.</h1>
+    <p class="lead">Aprende a invertir desde cero con una guía interactiva, y entiende de verdad qué hay dentro de tu cartera. Sin jerga, sin humo y siempre con tus propios números.</p>
+    <p class="quote">“When you risk nothing, you risk everything”</p>
 
-    <div class="strip">
-      <div class="stat"><div class="v rose">−18%</div><div class="l">tu dinero en el banco · 2020–2026</div></div>
-      <div class="stat"><div class="v em">+128%</div><div class="l">bolsa global (MSCI World) · 2020–2026</div></div>
-      <div class="stat"><div class="v em">18 300 €</div><div class="l">100 €/mes al 8% · 10 años</div></div>
+    <div class="stats">
+      <div class="stat">
+        <div class="v dn">−18%</div>
+        <div class="l">Lo que ha perdido tu dinero <b>parado en el banco</b> desde 2020</div>
+      </div>
+      <div class="stat">
+        <div class="v up">+128%</div>
+        <div class="l">Lo que ha hecho la <b>bolsa global</b> en el mismo periodo</div>
+      </div>
+      <div class="stat">
+        <div class="v">18 300 €</div>
+        <div class="l">Lo que serían <b>100 €/mes</b> al 8% en 10 años</div>
+      </div>
+      <div class="stat">
+        <div class="v">6</div>
+        <div class="l">Calculadoras y simuladores <b>interactivos</b> en la guía</div>
+      </div>
     </div>
   </header>
 
-  <div class="cards">
+  <section class="paths">
 
-    <a class="card a" href="/aprende" style="text-decoration:none;color:inherit">
-      <span class="chip"><span class="dot"></span>Academia · Gratis</span>
+    <a class="path" href="/aprende">
+      <span class="num">01</span>
+      <span class="tag"><i></i>La guía</span>
       <h2>Invertir desde cero</h2>
-      <p>La guía interactiva para dar el primer paso: por qué invertir, interés compuesto, comisiones, dónde invertir y un plan de acción en 3 pasos.</p>
-      <div class="feats">
-        <div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Calculadoras y simuladores con tus números</div>
-        <div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>La bolsa explicada con ejemplos de andar por casa</div>
-        <div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Plan de acción para empezar hoy</div>
-      </div>
-      <span class="cta solid">Empezar la guía
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+      <p>Todo lo que me habría gustado que alguien me explicara antes de empezar, en una guía que se lee en un rato.</p>
+      <ul>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Por qué la inflación te está costando dinero ahora mismo</li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Interés compuesto y comisiones, con calculadoras</li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Un plan de acción en 3 pasos para empezar hoy</li>
+      </ul>
+      <span class="go">Empezar la guía
+        <span class="arw"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
       </span>
     </a>
 
-    <a class="card b" id="cartera" href="/cartera" style="text-decoration:none;color:inherit">
-      <span class="chip"><span class="dot"></span>Herramienta · Gratis</span>
+    <a class="path" href="/cartera">
+      <span class="num">02</span>
+      <span class="tag"><i></i>La herramienta</span>
       <h2>Analiza tu cartera</h2>
-      <p>Añade tus posiciones y obtén la radiografía de tu cartera: en qué estás invertido de verdad, qué te cuesta cada año y dónde estás concentrado.</p>
-      <div class="feats">
-        <div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Distribución por región y sector</div>
-        <div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Coste real en comisiones (TER ponderado)</div>
-        <div><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Sin registro: todo ocurre en tu navegador</div>
-      </div>
-      <span class="cta soft">Analizar mi cartera
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+      <p>¿Sabes de verdad qué tienes? Añade tus posiciones y te enseño la radiografía completa en un par de clics.</p>
+      <ul>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Región, sector y concentración real de tu dinero</li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Cuánto pagas al año y qué te cuesta a 20 años</li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Cómo se habría comportado en los últimos 5 años</li>
+      </ul>
+      <span class="go">Analizar mi cartera
+        <span class="arw"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
       </span>
     </a>
 
-  </div>
+  </section>
+
+  <section class="how">
+    <h2 class="htitle">Cómo funciona esto</h2>
+    <p class="hsub">No hay curso, ni newsletter obligatoria, ni un asesor esperando al otro lado. Es una guía y una herramienta, y las dos son gratis.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h3>Entiende lo básico</h3>
+        <p>Inflación, interés compuesto y comisiones. Con simuladores donde metes tus cifras y ves qué pasa con tu dinero, no con el de un ejemplo.</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h3>Da el primer paso</h3>
+        <p>Dónde abrir cuenta, qué fondos indexados existen y cómo automatizar una aportación mensual. Sin cantidades mínimas heroicas.</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h3>Revisa lo que tienes</h3>
+        <p>Cuando ya inviertes, la herramienta te enseña en qué estás realmente, qué te cuesta y dónde estás concentrado sin saberlo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <h2>El mejor momento para empezar fue hace 10 años.<br><em>El segundo mejor es hoy.</em></h2>
+    <a class="btn" href="/aprende">Empezar por la guía
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+    </a>
+  </section>
 
   <footer>
-    <b>Contenido educativo. No es asesoramiento financiero.</b><br>
-    Invertir conlleva riesgo de pérdida. Rentabilidades pasadas no garantizan rentabilidades futuras.<br>
-    Datos: Bloomberg (jul. 2026) e INE · Creado por <b>Alejandro Flecha</b> · <a href="/aprende">Guía completa y aviso legal</a>
+    <div class="fl">
+      <b>Contenido educativo. No es asesoramiento financiero.</b><br>
+      Invertir conlleva riesgo de pérdida. Rentabilidades pasadas no garantizan rentabilidades futuras.<br>
+      Datos de mercado de Bloomberg e INE · Creado por <b>Alejandro Flecha</b>
+    </div>
+    <div class="flinks">
+      <a href="/aprende">Guía</a>
+      <a href="/cartera">Analizador</a>
+      <a href="/aprende#encuesta">Contacto</a>
+    </div>
   </footer>
-
 </div>
 </body>
 </html>
